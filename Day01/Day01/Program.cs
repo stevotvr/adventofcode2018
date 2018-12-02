@@ -12,10 +12,7 @@ namespace Day01
 
             foreach (var l in input)
             {
-                if (int.TryParse(l, out int i))
-                {
-                    output += i;
-                }
+                output += int.Parse(l);
             }
 
             return output;
@@ -30,13 +27,10 @@ namespace Day01
             {
                 foreach (var l in input)
                 {
-                    if (int.TryParse(l, out int i))
+                    output += int.Parse(l);
+                    if (!list.Add(output))
                     {
-                        output += i;
-                        if (!list.Add(output))
-                        {
-                            return output;
-                        }
+                        return output;
                     }
                 }
             }
