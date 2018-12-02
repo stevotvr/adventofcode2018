@@ -33,12 +33,10 @@ namespace Day01
                     if (int.TryParse(l, out int i))
                     {
                         output += i;
-                        if (list.Contains(output))
+                        if (!list.Add(output))
                         {
                             return output;
                         }
-
-                        list.Add(output);
                     }
                 }
             }
