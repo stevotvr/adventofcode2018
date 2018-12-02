@@ -6,29 +6,6 @@ namespace Day01
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            var input = File.ReadAllLines("Input.txt");
-
-            while (true)
-            {
-                Console.WriteLine("Press 1 for part 1, 2 for part 2, Esc to exit...");
-                switch (Console.ReadKey(true).Key)
-                {
-                    case ConsoleKey.D1:
-                        Console.WriteLine("Running part 1...");
-                        Console.WriteLine($"Answer: {Part1(input)}");
-                        break;
-                    case ConsoleKey.D2:
-                        Console.WriteLine("Running part 2...");
-                        Console.WriteLine($"Answer: {Part2(input)}");
-                        break;
-                    case ConsoleKey.Escape:
-                        return;
-                }
-            }
-        }
-
         private static int Part1(string[] input)
         {
             var output = 0;
@@ -63,6 +40,29 @@ namespace Day01
 
                         list.Add(output);
                     }
+                }
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            var input = File.ReadAllLines("Input.txt");
+
+            while (true)
+            {
+                Console.WriteLine("Press 1 for part 1, 2 for part 2, Esc to exit...");
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.D1:
+                        Console.WriteLine("Running part 1...");
+                        Console.WriteLine($"Answer: {Part1(input)}");
+                        break;
+                    case ConsoleKey.D2:
+                        Console.WriteLine("Running part 2...");
+                        Console.WriteLine($"Answer: {Part2(input)}");
+                        break;
+                    case ConsoleKey.Escape:
+                        return;
                 }
             }
         }
