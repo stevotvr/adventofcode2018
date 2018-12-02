@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Day02
 {
@@ -37,12 +38,12 @@ namespace Day02
 
         private static string Part2(string[] input)
         {
+            var d = 0;
+            var sb = new StringBuilder();
             foreach (var a in input)
             {
                 foreach (var b in input)
                 {
-                    var d = 0;
-                    var s = string.Empty;
                     for (var i = 0; i < a.Length; i++)
                     {
                         if (a[i] != b[i])
@@ -54,14 +55,17 @@ namespace Day02
                         }
                         else
                         {
-                            s += a[i];
+                            sb.Append(a[i]);
                         }
                     }
 
                     if (d == 1)
                     {
-                        return s;
+                        return sb.ToString();
                     }
+
+                    d = 0;
+                    sb.Clear();
                 }
             }
 
