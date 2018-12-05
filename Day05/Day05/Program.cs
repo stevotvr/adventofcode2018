@@ -10,6 +10,11 @@ namespace Day05
     {
         private static int Part1(string input)
         {
+            return React(input).Length;
+        }
+
+        private static string React(string input)
+        {
             var sb = new StringBuilder();
             var stop = false;
             while (!stop)
@@ -40,13 +45,14 @@ namespace Day05
                 sb.Clear();
             }
 
-            return input.Length;
+            return input;
         }
 
         private static int Part2(string input)
         {
             var handles = new WaitHandle[26];
             var lengths = new int[26];
+            input = React(input);
             var lower = input.ToLower();
             for (var i = 0; i < 26; i++)
             {
