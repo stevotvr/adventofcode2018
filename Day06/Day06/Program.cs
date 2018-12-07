@@ -38,17 +38,17 @@ namespace Day06
             {
                 for (var y = minX; y <= maxY; y++)
                 {
-                    var best = int.MaxValue;
+                    var nearest = int.MaxValue;
                     var idx = -1;
                     for (var i = 0; i < points.Length; i++)
                     {
                         var dist = Math.Abs(x - points[i].X) + Math.Abs(y - points[i].Y);
-                        if (dist < best)
+                        if (dist < nearest)
                         {
                             idx = i;
-                            best = dist;
+                            nearest = dist;
                         }
-                        else if (dist == best)
+                        else if (dist == nearest)
                         {
                             idx = -1;
                         }
