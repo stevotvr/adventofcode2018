@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Day15
 {
@@ -26,7 +24,7 @@ namespace Day15
 
                 foreach (var p in players)
                 {
-                    Console.WriteLine(p.hp);
+                    Console.WriteLine($"{p.type} {p.hp} {p.y},{p.x}");
                 }
 
                 Console.WriteLine(rounds);
@@ -39,7 +37,8 @@ namespace Day15
                         continue;
                     }
 
-                    if (!players.Any(x => x.type == (players[i].type == 'E' ? 'G' : 'E')))
+                    var opp = players[i].type == 'E' ? 'G' : 'E';
+                    if (!players.Any(x => x.type == opp))
                     {
                         return rounds * players.Where(x => x.type != '.').Select(x => x.hp).Sum();
                     }
@@ -49,16 +48,17 @@ namespace Day15
                         continue;
                     }
 
-                    if (FindNearest(players[i], out var nearest))
+                    if (FindNearestAdjacent(players[i], x => x.type == opp, out var nearest))
                     {
-                        FindNearest(nearest, out var nextMove);
+                        FindNearestAdjacent(nearest, x => x == players[i], out var nextMove);
                         nextMove.type = players[i].type;
                         nextMove.hp = players[i].hp;
                         players[i].type = '.';
                         players[i] = nextMove;
+
+                        Attack(players[i]);
                     }
 
-                    Attack(players[i]);
                 }
 
                 players.RemoveAll(x => x.type == '.');
@@ -75,7 +75,7 @@ namespace Day15
 
         private static bool Attack(Node player)
         {
-            foreach (var n in player.nodes.Where(x => x != null).OrderBy(x => x.hp).ThenBy(x => x.y).ThenBy(x => x.x))
+            foreach (var n in player.edges.Where(x => x != null).OrderBy(x => x.hp).ThenBy(x => x.y).ThenBy(x => x.x))
             {
                 if (n.type != '.' && n.type != player.type)
                 {
@@ -98,7 +98,9 @@ namespace Day15
 
         private static Dictionary<Node, int> distances = new Dictionary<Node, int>();
 
-        private static bool FindNearest(Node player, out Node nearest)
+        private static List<Node> matches = new List<Node>();
+
+        private static bool FindNearestAdjacent(Node player, Func<Node, bool> cond, out Node nearest)
         {
             distances.Clear();
             distances[player] = 0;
@@ -106,36 +108,41 @@ namespace Day15
             queue.Enqueue(player);
             visited.Clear();
             visited.Add(player);
-            var list = new List<Node>();
+            matches.Clear();
             while (queue.Count > 0)
             {
                 var node = queue.Dequeue();
-                foreach (var n in node.nodes)
+                foreach (var e in node.edges)
                 {
-                    if (n == null || n.type == player.type || visited.Contains(n))
+                    if (e == null || visited.Contains(e))
                     {
                         continue;
                     }
 
-                    if (n.type != '.')
+                    if (cond(e))
                     {
-                        list.Add(node);
+                        matches.Add(node);
                         continue;
                     }
 
-                    distances[n] = distances[node] + 1;
-                    queue.Enqueue(n);
-                    visited.Add(n);
+                    if (e.type != '.')
+                    {
+                        continue;
+                    }
+
+                    distances[e] = distances[node] + 1;
+                    queue.Enqueue(e);
+                    visited.Add(e);
                 }
             }
 
-            if (list.Count() < 1)
+            if (matches.Count() < 1)
             {
                 nearest = null;
                 return false;
             }
 
-            nearest = list.Distinct().OrderBy(x => distances[x]).ThenBy(x => x.y).ThenBy(x => x.x).First();
+            nearest = matches.OrderBy(x => distances[x]).ThenBy(x => x.y).ThenBy(x => x.x).First();
             return true;
         }
 
@@ -143,7 +150,7 @@ namespace Day15
         {
             public int x;
             public int y;
-            public Node[] nodes = new Node[4];
+            public Node[] edges = new Node[4];
             public char type;
             public int hp = 200;
             public int attack = 3;
@@ -192,10 +199,10 @@ namespace Day15
                         continue;
                     }
 
-                    node.nodes[0] = nodes[y - 1, x];
-                    node.nodes[1] = nodes[y, x - 1];
-                    node.nodes[2] = nodes[y, x + 1];
-                    node.nodes[3] = nodes[y + 1, x];
+                    node.edges[0] = nodes[y - 1, x];
+                    node.edges[1] = nodes[y, x - 1];
+                    node.edges[2] = nodes[y, x + 1];
+                    node.edges[3] = nodes[y + 1, x];
                 }
             }
 
