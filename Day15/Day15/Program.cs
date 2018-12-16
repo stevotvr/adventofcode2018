@@ -7,29 +7,11 @@ namespace Day15
 {
     class Program
     {
-        private static int Part1(List<Node> players, Node[,] input)
+        private static int Part1(List<Node> players)
         {
             var rounds = 0;
             while (true)
             {
-                for (var y = 0; y < input.GetLength(0); y++)
-                {
-                    for (var x = 0; x < input.GetLength(1); x++)
-                    {
-                        Console.Write(input[y, x] == null ? '#' : input[y, x].type);
-                    }
-
-                    Console.WriteLine();
-                }
-
-                foreach (var p in players)
-                {
-                    Console.WriteLine($"{p.type} {p.hp} {p.y},{p.x}");
-                }
-
-                Console.WriteLine(rounds);
-                Console.WriteLine();
-
                 var queue = new Queue<Node>(players);
                 while (queue.Count > 0)
                 {
@@ -225,7 +207,7 @@ namespace Day15
                 {
                     case ConsoleKey.D1:
                         Console.WriteLine("Running part 1...");
-                        Console.WriteLine($"Answer: {Part1(players, nodes)}");
+                        Console.WriteLine($"Answer: {Part1(players)}");
                         break;
                     case ConsoleKey.D2:
                         Console.WriteLine("Running part 2...");
