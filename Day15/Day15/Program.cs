@@ -30,38 +30,48 @@ namespace Day15
                 Console.WriteLine(rounds);
                 Console.WriteLine();
 
-                for (var i = 0; i < players.Count; i++)
+                var queue = new Queue<Node>(players);
+                while (queue.Count > 0)
                 {
-                    if (players[i].type == '.')
+                    var player = queue.Dequeue();
+                    if (player.type == '.')
                     {
                         continue;
                     }
 
-                    var opp = players[i].type == 'E' ? 'G' : 'E';
+                    var opp = player.type == 'E' ? 'G' : 'E';
                     if (!players.Any(x => x.type == opp))
                     {
-                        return rounds * players.Where(x => x.type != '.').Select(x => x.hp).Sum();
+                        return rounds * players.Select(x => x.hp).Sum();
                     }
 
-                    if (Attack(players[i]))
+                    if (Attack(player, out var victim))
                     {
+                        if (victim.type == '.')
+                        {
+                            players.Remove(victim);
+                        }
+
                         continue;
                     }
 
-                    if (FindNearestAdjacent(players[i], x => x.type == opp, out var nearest))
+                    if (FindNearestAdjacent(player, x => x.type == opp, out var nearest))
                     {
-                        FindNearestAdjacent(nearest, x => x == players[i], out var nextMove);
-                        nextMove.type = players[i].type;
-                        nextMove.hp = players[i].hp;
-                        players[i].type = '.';
-                        players[i] = nextMove;
+                        FindNearestAdjacent(nearest, x => x == player, out var nextMove);
+                        nextMove.type = player.type;
+                        nextMove.hp = player.hp;
+                        player.type = '.';
+                        players.Remove(player);
+                        players.Add(nextMove);
 
-                        Attack(players[i]);
+                        Attack(nextMove, out victim);
+                        if (victim?.type == '.')
+                        {
+                            players.Remove(victim);
+                        }
                     }
-
                 }
 
-                players.RemoveAll(x => x.type == '.');
                 players = players.OrderBy(x => x.y).ThenBy(x => x.x).ToList();
                 rounds++;
             }
@@ -73,22 +83,24 @@ namespace Day15
             return 0;
         }
 
-        private static bool Attack(Node player)
+        private static bool Attack(Node player, out Node victim)
         {
-            foreach (var n in player.edges.Where(x => x != null).OrderBy(x => x.hp).ThenBy(x => x.y).ThenBy(x => x.x))
+            foreach (var e in player.edges.Where(x => x != null).OrderBy(x => x.hp).ThenBy(x => x.y).ThenBy(x => x.x))
             {
-                if (n.type != '.' && n.type != player.type)
+                if (e.type != '.' && e.type != player.type)
                 {
-                    n.hp -= player.attack;
-                    if (n.hp <= 0)
+                    e.hp -= player.attack;
+                    if (e.hp <= 0)
                     {
-                        n.type = '.';
+                        e.type = '.';
                     }
 
+                    victim = e;
                     return true;
                 }
             }
 
+            victim = null;
             return false;
         }
 
