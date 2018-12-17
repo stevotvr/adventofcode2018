@@ -7,7 +7,7 @@ namespace Day15
 {
     class Program
     {
-        private static int Part1(List<Node> players)
+        private static int Part1(List<Node> players, bool allowElfDeath = true)
         {
             var rounds = 0;
             while (true)
@@ -29,9 +29,15 @@ namespace Day15
 
                     if (Attack(player, out var victim))
                     {
-                        if (victim.type == '.')
+                        if (victim.hp <= 0)
                         {
+                            if (!allowElfDeath && victim.type == 'E')
+                            {
+                                return 0;
+                            }
+
                             players.Remove(victim);
+                            victim.type = '.';
                         }
 
                         continue;
@@ -42,14 +48,21 @@ namespace Day15
                         FindNearestAdjacent(nearest, x => x == player, out var nextMove);
                         nextMove.type = player.type;
                         nextMove.hp = player.hp;
+                        nextMove.attack = player.attack;
                         player.type = '.';
                         players.Remove(player);
                         players.Add(nextMove);
 
                         Attack(nextMove, out victim);
-                        if (victim?.type == '.')
+                        if (victim?.hp <= 0)
                         {
+                            if (!allowElfDeath && victim.type == 'E')
+                            {
+                                return 0;
+                            }
+
                             players.Remove(victim);
+                            victim.type = '.';
                         }
                     }
                 }
@@ -60,9 +73,41 @@ namespace Day15
 
         }
 
-        private static int Part2(List<Node> players)
+        private static int Part2(List<Node> players, Node[,] nodes, string[] input)
         {
-            return 0;
+            var elfAttack = 4;
+            var elfCount = players.Count(x => x.type == 'E');
+            while (true)
+            {
+                players.Clear();
+                for (var y = 1; y < input.Length - 1; y++)
+                {
+                    for (var x = 1; x < input[y].Length - 1; x++)
+                    {
+                        var node = nodes[y, x];
+                        if (node == null)
+                        {
+                            continue;
+                        }
+
+                        node.type = input[y][x];
+                        node.hp = 200;
+                        node.attack = node.type == 'E' ? elfAttack : 3;
+                        if (node.type != '.')
+                        {
+                            players.Add(node);
+                        }
+                    }
+                }
+
+                var result = Part1(players, false);
+                if (result > 0)
+                {
+                    return result;
+                }
+
+                elfAttack++;
+            }
         }
 
         private static bool Attack(Node player, out Node victim)
@@ -72,11 +117,6 @@ namespace Day15
                 if (e.type != '.' && e.type != player.type)
                 {
                     e.hp -= player.attack;
-                    if (e.hp <= 0)
-                    {
-                        e.type = '.';
-                    }
-
                     victim = e;
                     return true;
                 }
@@ -211,7 +251,7 @@ namespace Day15
                         break;
                     case ConsoleKey.D2:
                         Console.WriteLine("Running part 2...");
-                        Console.WriteLine($"Answer: {Part2(players)}");
+                        Console.WriteLine($"Answer: {Part2(players, nodes, input)}");
                         break;
                     case ConsoleKey.Escape:
                         return;
