@@ -48,34 +48,31 @@ namespace Day16
                 candidates[i] = new HashSet<string>(instructions.Keys);
             }
 
-            while (instructionMap.Count < 16)
+            foreach (var sample in input1)
             {
-                foreach (var sample in input1)
+                var lines = sample.Split('\n');
+                var before = lines[0].Substring(9, 10).Split(',').Select(x => int.Parse(x.Trim())).ToArray();
+                var test = lines[1].Split(' ').Select(x => int.Parse(x)).ToArray();
+                var after = lines[2].Substring(9, 10).Split(',').Select(x => int.Parse(x.Trim())).ToArray();
+
+                foreach (var instruction in instructions)
                 {
-                    var lines = sample.Split('\n');
-                    var before = lines[0].Substring(9, 10).Split(',').Select(x => int.Parse(x.Trim())).ToArray();
-                    var test = lines[1].Split(' ').Select(x => int.Parse(x)).ToArray();
-                    var after = lines[2].Substring(9, 10).Split(',').Select(x => int.Parse(x.Trim())).ToArray();
-
-                    foreach (var instruction in instructions)
+                    if (candidates[test[0]].Count == 0)
                     {
-                        if (candidates[test[0]].Count == 0)
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        before.CopyTo(registers, 0);
-                        instruction.Value(test[1], test[2], test[3]);
-                        if (!keys.All(x => registers[x] == after[x]))
+                    before.CopyTo(registers, 0);
+                    instruction.Value(test[1], test[2], test[3]);
+                    if (!keys.All(x => registers[x] == after[x]))
+                    {
+                        candidates[test[0]].Remove(instruction.Key);
+                        if (candidates[test[0]].Count == 1)
                         {
-                            candidates[test[0]].Remove(instruction.Key);
-                            if (candidates[test[0]].Count == 1)
+                            instructionMap[test[0]] = candidates[test[0]].First();
+                            foreach (var hs in candidates.Values)
                             {
-                                instructionMap[test[0]] = candidates[test[0]].First();
-                                foreach (var hs in candidates.Values)
-                                {
-                                    hs.Remove(instructionMap[test[0]]);
-                                }
+                                hs.Remove(instructionMap[test[0]]);
                             }
                         }
                     }
