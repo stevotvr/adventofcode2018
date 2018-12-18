@@ -128,42 +128,26 @@ namespace Day17
                 var spill = false;
                 while (!spill)
                 {
-                    x = block[0];
-                    while (!grid[x, y])
+                    foreach (var dir in new int[] { -1, 1 })
                     {
-                        if (!grid[x, y + 1] && !water[x, y + 1])
+                        x = block[0];
+                        while (!grid[x, y])
                         {
-                            spill = true;
-                            if (grid[x + 1, y + 1])
+                            if (!grid[x, y + 1] && !water[x, y + 1])
                             {
-                                stack.Push(new int[] { x, y });
+                                spill = true;
+                                if (grid[x - dir, y + 1])
+                                {
+                                    stack.Push(new int[] { x, y });
+                                }
+
+                                break;
                             }
 
-                            break;
+                            water[x, y] = true;
+
+                            x += dir;
                         }
-
-                        water[x, y] = true;
-
-                        x--;
-                    }
-
-                    x = block[0];
-                    while (!grid[x, y])
-                    {
-                        if (!grid[x, y + 1] && !water[x, y + 1])
-                        {
-                            spill = true;
-                            if (grid[x - 1, y + 1])
-                            {
-                                stack.Push(new int[] { x, y });
-                            }
-
-                            break;
-                        }
-
-                        water[x, y] = true;
-
-                        x++;
                     }
 
                     y--;
