@@ -50,7 +50,7 @@ namespace Day18
                 {
                     var open = 0;
                     var trees = 0;
-                    var lumbar = 0;
+                    var lumber = 0;
                     for (var r2 = -1; r2 <= 1; r2++)
                     {
                         if (r + r2 < 0 || r + r2 >= state.Length)
@@ -79,7 +79,7 @@ namespace Day18
                                     trees++;
                                     break;
                                 case '#':
-                                    lumbar++;
+                                    lumber++;
                                     break;
                             }
                         }
@@ -91,10 +91,10 @@ namespace Day18
                             newState[r][c] = trees >= 3 ? '|' : '.';
                             break;
                         case '|':
-                            newState[r][c] = lumbar >= 3 ? '#' : '|';
+                            newState[r][c] = lumber >= 3 ? '#' : '|';
                             break;
                         case '#':
-                            newState[r][c] = (lumbar > 0 && trees > 0) ? '#' : '.';
+                            newState[r][c] = (lumber > 0 && trees > 0) ? '#' : '.';
                             break;
                     }
                 }
