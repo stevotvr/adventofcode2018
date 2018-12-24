@@ -43,37 +43,33 @@ namespace Day22
 
         private static int Part2(int depth, int targetX, int targetY)
         {
-            var bounds = (int)(Math.Max(targetX, targetY) * 1.2);
-            var neighbors = new int[][] { new int[] { 0, -1 }, new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, 1 } };
+            var neighbors = new (int dx, int dy, bool switchTool)[] { (0, -1, false), (-1, 0, false ), (1, 0, false), (0, 1, false), (0, 0, true) };
+            var switchTo = new Tool[][] { new Tool[] { 0, Tool.Gear, Tool.Torch }, new Tool[] { Tool.Gear, 0, Tool.Neither }, new Tool[] { Tool.Torch, Tool.Neither, 0 } };
 
-            var start = new State
-            {
-                node = new Node(null, 0, 0, depth, targetX, targetY),
-                tool = Tool.Torch,
-            };
+            var start = (new Node(null, 0, 0, depth, targetX, targetY), Tool.Torch);
 
             var grid = new List<List<Node>>
             {
                 new List<Node>
                 {
-                    start.node,
+                    start.Item1,
                 },
             };
             var maxX = 0;
             var maxY = 0;
 
-            var times = new Dictionary<State, int>
+            var times = new Dictionary<(Node node, Tool tool), int>
             {
                 { start, 0 },
             };
-            var queue = new Queue<State>();
-            queue.Enqueue(start);
-            while (queue.Count > 0)
+            var queue = new PriorityQueue<(Node node, Tool tool)>();
+            queue.Push(start, 0);
+            while (!queue.Empty)
             {
-                var state = queue.Dequeue();
-                if (state.node.x >= bounds || state.node.y >= bounds)
+                var state = queue.Pop();
+                if (state.node.x == targetX && state.node.y == targetY && state.tool == Tool.Torch)
                 {
-                    continue;
+                    return times[state];
                 }
 
                 if (maxX < state.node.x + 1)
@@ -95,100 +91,75 @@ namespace Day22
                     }
                 }
 
-                var newStates = new List<State>();
-                foreach (var n in neighbors)
+                foreach (var (dx, dy, switchTool) in neighbors)
                 {
-                    if (state.node.x + n[0] < 0 || state.node.y + n[1] < 0)
+                    if (state.node.x + dx < 0 || state.node.y + dy < 0)
                     {
                         continue;
                     }
 
-                    var edge = grid[state.node.y + n[1]][state.node.x + n[0]];
-                    switch (state.node.type)
+                    (Node node, Tool tool) newState;
+                    var time = times[state];
+                    if (switchTool)
                     {
-                        case Terrain.Rocky:
-                            switch (edge.type)
-                            {
-                                case Terrain.Rocky:
-                                    newStates.Add(new State(edge, Tool.Torch));
-                                    newStates.Add(new State(edge, Tool.Gear));
-                                    break;
-                                case Terrain.Wet:
-                                    newStates.Add(new State(edge, Tool.Gear));
-                                    break;
-                                case Terrain.Narrow:
-                                    newStates.Add(new State(edge, Tool.Torch));
-                                    break;
-                            }
-
-                            break;
-                        case Terrain.Wet:
-                            switch (edge.type)
-                            {
-                                case Terrain.Rocky:
-                                    newStates.Add(new State(edge, Tool.Gear));
-                                    break;
-                                case Terrain.Wet:
-                                    newStates.Add(new State(edge, Tool.Neither));
-                                    newStates.Add(new State(edge, Tool.Gear));
-                                    break;
-                                case Terrain.Narrow:
-                                    newStates.Add(new State(edge, Tool.Neither));
-                                    break;
-                            }
-
-                            break;
-                        case Terrain.Narrow:
-                            switch (edge.type)
-                            {
-                                case Terrain.Rocky:
-                                    newStates.Add(new State(edge, Tool.Torch));
-                                    break;
-                                case Terrain.Wet:
-                                    newStates.Add(new State(edge, Tool.Neither));
-                                    break;
-                                case Terrain.Narrow:
-                                    newStates.Add(new State(edge, Tool.Neither));
-                                    newStates.Add(new State(edge, Tool.Torch));
-                                    break;
-                            }
-
-                            break;
+                        newState = (state.node, switchTo[(int)state.node.type][(int)state.tool]);
+                        time += 7;
                     }
-                }
+                    else
+                    {
+                        var edge = grid[state.node.y + dy][state.node.x + dx];
+                        if ((int)state.tool == (int)edge.type)
+                        {
+                            continue;
+                        }
 
-                foreach (var newState in newStates)
-                {
-                    var time = times[state] + (newState.tool == state.tool ? 1 : 8);
+                        newState = (edge, state.tool);
+                        time++;
+                    }
+
                     if (!times.ContainsKey(newState) || time < times[newState])
                     {
                         times[newState] = time;
-                        queue.Enqueue(newState);
+                        queue.Push(newState, time);
                     }
                 }
             }
 
-            return times.Where(x => x.Key.node.x == targetX && x.Key.node.y == targetY && x.Key.tool == Tool.Torch).Min(x => x.Value);
+            return 0;
         }
 
-        private struct State : IEquatable<State>
+        private class PriorityQueue<T>
         {
-            public Node node;
-            public Tool tool;
+            private List<(T item, int priority)> items = new List<(T, int)>();
 
-            public State(Node node, Tool tool)
+            public bool Empty { get => items.Count == 0; }
+
+            public void Push(T item, int priority)
             {
-                this.node = node;
-                this.tool = tool;
+                this.items.Add((item, priority));
+
+                for (var i = this.items.Count - 1; i > 0; i = (i - 1) / 2)
+                {
+                    if (this.items[i].priority > this.items[(i - 1) / 2].priority)
+                    {
+                        break;
+                    }
+
+                    var temp = this.items[(i - 1) / 2];
+                    this.items[(i - 1) / 2] = this.items[i];
+                    this.items[i] = temp;
+                }
             }
 
-            public bool Equals(State other)
+            public T Pop()
             {
-                return this.node == other.node && this.tool == other.tool;
+                var item = items[0];
+                this.items.RemoveAt(0);
+                return item.item;
             }
         }
 
-        private class Node
+        private struct Node
         {
             public int x;
             public int y;
@@ -230,7 +201,7 @@ namespace Day22
             Gear,
         }
 
-        private enum Terrain : int
+        private enum Terrain
         {
             Rocky,
             Wet,
