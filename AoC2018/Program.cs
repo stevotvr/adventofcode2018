@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace AoC2018
     {
         static void Main(string[] args)
         {
+            var sw = new Stopwatch();
             var day = 0;
 
             while (true)
@@ -43,17 +45,26 @@ namespace AoC2018
                     solution.LoadInput(Directory.GetFiles("Input", $"Day{day:d2}?.txt"));
 
                     Console.WriteLine("Press 1 for part 1, 2 for part 2, or ESC to choose another day...");
+                    object answer;
                     switch (Console.ReadKey(true).Key)
                     {
                         case ConsoleKey.D1:
                         case ConsoleKey.NumPad1:
                             Console.WriteLine("Running part 1...");
-                            Console.WriteLine($"Answer: {solution.Part1()}");
+                            sw.Restart();
+                            answer = solution.Part1();
+                            sw.Stop();
+                            Console.WriteLine($"Answer: {answer}");
+                            Console.WriteLine($"{sw.ElapsedMilliseconds}ms");
                             break;
                         case ConsoleKey.D2:
                         case ConsoleKey.NumPad2:
                             Console.WriteLine("Running part 2...");
-                            Console.WriteLine($"Answer: {solution.Part2()}");
+                            sw.Restart();
+                            answer = solution.Part2();
+                            sw.Stop();
+                            Console.WriteLine($"Answer: {answer}");
+                            Console.WriteLine($"{sw.ElapsedMilliseconds}ms");
                             break;
                         case ConsoleKey.Escape:
                             day = 0;
