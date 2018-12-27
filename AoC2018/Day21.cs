@@ -29,7 +29,7 @@ namespace AoC2018
 
         private string[] input;
 
-        private int[] registers;
+        private int[] registers = new int[6];
 
         public void LoadInput(params string[] files)
         {
@@ -39,7 +39,6 @@ namespace AoC2018
         public object Part1()
         {
             ParseProgram(out var ops, out var pcr, out int testReg);
-            registers = new int[6];
             var pc = 0;
             while (registers[pcr] >= 0 && registers[pcr] < ops.Count)
             {
@@ -61,7 +60,6 @@ namespace AoC2018
         public object Part2()
         {
             ParseProgram(out var ops, out var pcr, out int testReg);
-            registers = new int[6];
             var states = new HashSet<int>();
             var pc = 0;
             var prev = 0;

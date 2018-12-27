@@ -29,7 +29,7 @@ namespace AoC2018
 
         private string[] input;
 
-        private int[] registers;
+        private int[] registers = new int[6];
 
         public void LoadInput(params string[] files)
         {
@@ -38,7 +38,6 @@ namespace AoC2018
 
         public object Part1()
         {
-            registers = new int[6];
             var pcr = int.Parse(input[0].Substring(input[0].IndexOf(' ')));
             var pc = 0;
             var ops = new List<Action>();
