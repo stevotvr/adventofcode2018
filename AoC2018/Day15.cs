@@ -11,7 +11,7 @@ namespace AoC2018
 
         private Node[,] nodes;
 
-        private List<Node> players;
+        private List<Node> players = new List<Node>();
 
         private bool allowElfDeath = true;
 
@@ -27,7 +27,6 @@ namespace AoC2018
         {
             input = File.ReadAllLines(files[0]);
             nodes = new Node[input.Length, input[0].Length];
-            players = new List<Node>();
             for (var y = 1; y < input.Length - 1; y++)
             {
                 for (var x = 1; x < input[y].Length - 1; x++)

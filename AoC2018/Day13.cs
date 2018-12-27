@@ -8,12 +8,11 @@ namespace AoC2018
     {
         private char[,] tracks;
 
-        private List<Cart> carts;
+        private List<Cart> carts = new List<Cart>();
 
         public void LoadInput(params string[] files)
         {
             var input = File.ReadAllLines(files[0]);
-            carts = new List<Cart>();
             tracks = new char[input.Length, input[0].Length];
             for (var i = 0; i < input.Length; i++)
             {

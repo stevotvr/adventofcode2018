@@ -8,12 +8,11 @@ namespace AoC2018
 {
     class Day23 : ISolution
     {
-        private List<(int x, int y, int z, int r)> bots;
+        private List<(int x, int y, int z, int r)> bots = new List<(int x, int y, int z, int r)>();
 
         public void LoadInput(params string[] files)
         {
             var input = File.ReadAllLines(files[0]);
-            bots = new List<(int x, int y, int z, int r)>();
             foreach (var l in input)
             {
                 var m = Regex.Match(l, @"^pos=<(\-?[0-9]+),(\-?[0-9]+),(\-?[0-9]+)>, r=([0-9]+)$");

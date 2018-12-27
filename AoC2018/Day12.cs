@@ -8,13 +8,12 @@ namespace AoC2018
     {
         private char[] initial;
 
-        private Dictionary<string, char> patterns;
+        private Dictionary<string, char> patterns = new Dictionary<string, char>();
 
         public void LoadInput(params string[] files)
         {
             var input = File.ReadAllLines(files[0]);
             initial = input[0].Substring(input[0].IndexOf(':') + 1).Trim().ToCharArray();
-            patterns = new Dictionary<string, char>();
             for (var i = 2; i < input.Length; i++)
             {
                 var parts = input[i].Split(new string[] { " => " }, StringSplitOptions.None);
