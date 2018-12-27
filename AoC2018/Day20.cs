@@ -7,7 +7,7 @@ namespace AoC2018
 {
     class Day20 : ISolution
     {
-        private static readonly ReadOnlyDictionary<char, int> directions = new ReadOnlyDictionary<char, int>(new Dictionary<char, int>
+        private static readonly ReadOnlyDictionary<char, int> Directions = new ReadOnlyDictionary<char, int>(new Dictionary<char, int>
         {
             { 'N', 0 },
             { 'E', 1 },
@@ -53,7 +53,7 @@ namespace AoC2018
                         current = stack.Peek();
                         break;
                     default:
-                        var index = directions[input[i]];
+                        var index = Directions[input[i]];
                         var newRoom = current.rooms[index] = current.rooms[index] ?? new Room();
                         newRoom.rooms[(index + 2) % 4] = current;
                         current = newRoom;

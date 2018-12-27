@@ -17,7 +17,7 @@ namespace AoC2018
             Bludgeoning,
         }
 
-        private static readonly ReadOnlyDictionary<string, Damage> damageMap = new ReadOnlyDictionary<string, Damage>(new Dictionary<string, Damage>
+        private static readonly ReadOnlyDictionary<string, Damage> DamageMap = new ReadOnlyDictionary<string, Damage>(new Dictionary<string, Damage>
         {
             { "cold", Damage.Cold },
             { "fire", Damage.Fire },
@@ -125,7 +125,7 @@ namespace AoC2018
             var units = int.Parse(m.Groups[1].Value);
             var hp = int.Parse(m.Groups[2].Value);
             var attackDamage = int.Parse(m.Groups[4].Value);
-            var attackType = damageMap[m.Groups[5].Value];
+            var attackType = DamageMap[m.Groups[5].Value];
             var initiative = int.Parse(m.Groups[6].Value);
 
             Damage[] weaknesses = null;
@@ -136,11 +136,11 @@ namespace AoC2018
                 {
                     if (weakImmune[0] == 'w')
                     {
-                        weaknesses = weakImmune.Substring(8).Split(',').Select(x => damageMap[x.Trim()]).ToArray();
+                        weaknesses = weakImmune.Substring(8).Split(',').Select(x => DamageMap[x.Trim()]).ToArray();
                     }
                     else
                     {
-                        immunities = weakImmune.Substring(10).Split(',').Select(x => damageMap[x.Trim()]).ToArray();
+                        immunities = weakImmune.Substring(10).Split(',').Select(x => DamageMap[x.Trim()]).ToArray();
                     }
                 }
             }

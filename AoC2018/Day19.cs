@@ -7,7 +7,7 @@ namespace AoC2018
 {
     class Day19 : ISolution
     {
-        private static readonly ReadOnlyDictionary<string, Action<int[], int, int, int>> instructions = new ReadOnlyDictionary<string, Action<int[], int, int, int>>(new Dictionary<string, Action<int[], int, int, int>>
+        private static readonly ReadOnlyDictionary<string, Action<int[], int, int, int>> Instructions = new ReadOnlyDictionary<string, Action<int[], int, int, int>>(new Dictionary<string, Action<int[], int, int, int>>
         {
             { "addr", (r, a, b, c) => r[c] = r[a] + r[b] },
             { "addi", (r, a, b, c) => r[c] = r[a] + b },
@@ -44,7 +44,7 @@ namespace AoC2018
             for (var i = 1; i < input.Length; i++)
             {
                 var words = input[i].Split(' ');
-                ops.Add(() => instructions[words[0]](registers, int.Parse(words[1]), int.Parse(words[2]), int.Parse(words[3])));
+                ops.Add(() => Instructions[words[0]](registers, int.Parse(words[1]), int.Parse(words[2]), int.Parse(words[3])));
             }
 
             while (registers[pcr] >= 0 && registers[pcr] < ops.Count)

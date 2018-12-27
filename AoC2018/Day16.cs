@@ -8,7 +8,7 @@ namespace AoC2018
 {
     class Day16 : ISolution
     {
-        private static readonly ReadOnlyDictionary<string, Action<int[], int, int, int>> instructions = new ReadOnlyDictionary<string, Action<int[], int, int, int>>(new Dictionary<string, Action<int[], int, int, int>>
+        private static readonly ReadOnlyDictionary<string, Action<int[], int, int, int>> Instructions = new ReadOnlyDictionary<string, Action<int[], int, int, int>>(new Dictionary<string, Action<int[], int, int, int>>
         {
             { "addr", (r, a, b, c) => r[c] = r[a] + r[b] },
             { "addi", (r, a, b, c) => r[c] = r[a] + b },
@@ -52,7 +52,7 @@ namespace AoC2018
                 var after = lines[2].Substring(9, 10).Split(',').Select(x => int.Parse(x.Trim())).ToArray();
 
                 var c = 0;
-                foreach (var instruction in instructions.Values)
+                foreach (var instruction in Instructions.Values)
                 {
                     before.CopyTo(registers, 0);
                     instruction(registers, test[1], test[2], test[3]);
@@ -78,7 +78,7 @@ namespace AoC2018
             var instructionMap = new Dictionary<int, string>();
             for (var i = 0; i < 16; i++)
             {
-                candidates[i] = new HashSet<string>(instructions.Keys);
+                candidates[i] = new HashSet<string>(Instructions.Keys);
             }
 
             foreach (var sample in input1)
@@ -88,7 +88,7 @@ namespace AoC2018
                 var test = lines[1].Split(' ').Select(x => int.Parse(x)).ToArray();
                 var after = lines[2].Substring(9, 10).Split(',').Select(x => int.Parse(x.Trim())).ToArray();
 
-                foreach (var instruction in instructions)
+                foreach (var instruction in Instructions)
                 {
                     if (candidates[test[0]].Count == 0)
                     {
@@ -116,7 +116,7 @@ namespace AoC2018
             foreach (var line in input2)
             {
                 var op = line.Split(' ').Select(x => int.Parse(x)).ToArray();
-                instructions[instructionMap[op[0]]](registers, op[1], op[2], op[3]);
+                Instructions[instructionMap[op[0]]](registers, op[1], op[2], op[3]);
             }
 
             return registers[0];
