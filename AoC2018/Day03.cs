@@ -15,8 +15,8 @@ namespace AoC2018
 
         public object Part1()
         {
-            var coords = new HashSet<string>();
-            var overlap = new HashSet<string>();
+            var coords = new HashSet<(int x, int y)>();
+            var overlap = new HashSet<(int x, int y)>();
             foreach (var l in input)
             {
                 var parts = l.Split(new string[] { " @ ", ",", ": ", "x" }, StringSplitOptions.RemoveEmptyEntries);
@@ -28,9 +28,9 @@ namespace AoC2018
                 {
                     for (var y = top; y < height + top; y++)
                     {
-                        if (!coords.Add($"{x}x{y}"))
+                        if (!coords.Add((x, y)))
                         {
-                            overlap.Add($"{x}x{y}");
+                            overlap.Add((x, y));
                         }
                     }
                 }
@@ -47,7 +47,7 @@ namespace AoC2018
                 ids.Add(int.Parse(l.Substring(1, l.IndexOf(' '))));
             }
 
-            var map = new Dictionary<string, List<int>>();
+            var map = new Dictionary<(int x, int y), List<int>>();
             foreach (var l in input)
             {
                 var parts = l.Split(new string[] { " @ ", ",", ": ", "x" }, StringSplitOptions.RemoveEmptyEntries);
@@ -60,13 +60,13 @@ namespace AoC2018
                     for (var y = top; y < height + top; y++)
                     {
                         List<int> list;
-                        if (!map.TryGetValue($"{x}x{y}", out list))
+                        if (!map.TryGetValue((x, y), out list))
                         {
                             list = new List<int>();
                         }
 
                         list.Add(int.Parse(parts[0].Substring(1)));
-                        map[$"{x}x{y}"] = list;
+                        map[(x, y)] = list;
                     }
                 }
             }

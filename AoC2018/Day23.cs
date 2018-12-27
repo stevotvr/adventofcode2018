@@ -8,22 +8,16 @@ namespace AoC2018
 {
     class Day23 : ISolution
     {
-        private List<Bot> bots;
+        private List<(int x, int y, int z, int r)> bots;
 
         public void LoadInput(params string[] files)
         {
             var input = File.ReadAllLines(files[0]);
-            bots = new List<Bot>();
+            bots = new List<(int x, int y, int z, int r)>();
             foreach (var l in input)
             {
                 var m = Regex.Match(l, @"^pos=<(\-?[0-9]+),(\-?[0-9]+),(\-?[0-9]+)>, r=([0-9]+)$");
-                var bot = new Bot
-                {
-                    x = int.Parse(m.Groups[1].Value),
-                    y = int.Parse(m.Groups[2].Value),
-                    z = int.Parse(m.Groups[3].Value),
-                    r = int.Parse(m.Groups[4].Value),
-                };
+                var bot = (int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value), int.Parse(m.Groups[3].Value), int.Parse(m.Groups[4].Value));
 
                 bots.Add(bot);
             }
@@ -74,14 +68,6 @@ namespace AoC2018
             }
 
             return Math.Abs(best[0]) + Math.Abs(best[1]) + Math.Abs(best[2]);
-        }
-
-        private struct Bot
-        {
-            public int x;
-            public int y;
-            public int z;
-            public int r;
         }
     }
 }

@@ -63,7 +63,7 @@ namespace AoC2018
             }
 
             var results = new int[300];
-            var bestBlock = new int[300, 2];
+            var bestBlock = new (int x, int y)[300];
             var handles = new WaitHandle[64];
 
             for (var i = 0; i < 64; i++)
@@ -75,7 +75,7 @@ namespace AoC2018
             WaitHandle.WaitAll(handles);
 
             var size = Array.IndexOf(results, results.Max());
-            return $"{bestBlock[size, 0]},{bestBlock[size, 1]},{size}";
+            return $"{bestBlock[size].x},{bestBlock[size].y},{size}";
         }
 
         private static void TrySize(object state)
@@ -85,7 +85,7 @@ namespace AoC2018
             var start = (int)data[1];
             var end = start + (int)data[2];
             var results = (int[])data[3];
-            var bestBlock = (int[,])data[4];
+            var bestBlock = ((int x, int y)[])data[4];
             end = Math.Min(end, results.Length - 1);
 
             for (var s = start; s < end; s++)
@@ -107,8 +107,7 @@ namespace AoC2018
                         if (total > results[s])
                         {
                             results[s] = total;
-                            bestBlock[s, 0] = x + 1;
-                            bestBlock[s, 1] = y + 1;
+                            bestBlock[s] = (x + 1, y + 1);
                         }
                     }
                 }
