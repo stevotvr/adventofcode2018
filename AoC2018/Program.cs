@@ -34,15 +34,34 @@ namespace AoC2018
                 }
                 else
                 {
-                    var solution = Activator.CreateInstance(Type.GetType($"AoC2018.Day{day:d2}")) as ISolution;
-                    if (solution == null)
+                    ISolution solution;
+                    try
+                    {
+                        var solutionType = Type.GetType($"AoC2018.Day{day:d2}");
+                        sw.Restart();
+                        solution = (ISolution)Activator.CreateInstance(solutionType);
+                        sw.Stop();
+                    }
+                    catch
                     {
                         Console.WriteLine("Error loading solution");
                         day = 0;
                         continue;
                     }
 
-                    solution.LoadInput(Directory.GetFiles("Input", $"Day{day:d2}?.txt"));
+                    try
+                    {
+                        var files = Directory.GetFiles("Input", $"Day{day:d2}?.txt");
+                        sw.Start();
+                        solution.LoadInput(files);
+                        sw.Stop();
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Error loading solution input file");
+                        day = 0;
+                        continue;
+                    }
 
                     Console.WriteLine("Press 1 for part 1, 2 for part 2, or ESC to choose another day...");
                     object answer;
@@ -51,7 +70,7 @@ namespace AoC2018
                         case ConsoleKey.D1:
                         case ConsoleKey.NumPad1:
                             Console.WriteLine("Running part 1...");
-                            sw.Restart();
+                            sw.Start();
                             answer = solution.Part1();
                             sw.Stop();
                             Console.WriteLine($"Answer: {answer}");
@@ -60,7 +79,7 @@ namespace AoC2018
                         case ConsoleKey.D2:
                         case ConsoleKey.NumPad2:
                             Console.WriteLine("Running part 2...");
-                            sw.Restart();
+                            sw.Start();
                             answer = solution.Part2();
                             sw.Stop();
                             Console.WriteLine($"Answer: {answer}");
