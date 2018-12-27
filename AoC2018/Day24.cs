@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -16,14 +17,14 @@ namespace AoC2018
             Bludgeoning,
         }
 
-        private static readonly Dictionary<string, Damage> damageMap = new Dictionary<string, Damage>
+        private static readonly ReadOnlyDictionary<string, Damage> damageMap = new ReadOnlyDictionary<string, Damage>(new Dictionary<string, Damage>
         {
             { "cold", Damage.Cold },
             { "fire", Damage.Fire },
             { "radiation", Damage.Radiation },
             { "slashing", Damage.Slashing },
             { "bludgeoning", Damage.Bludgeoning },
-        };
+        });
 
         private string[] input;
 

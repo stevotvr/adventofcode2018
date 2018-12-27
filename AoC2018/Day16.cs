@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -7,38 +8,36 @@ namespace AoC2018
 {
     class Day16 : ISolution
     {
+        private static readonly ReadOnlyDictionary<string, Action<int[], int, int, int>> instructions = new ReadOnlyDictionary<string, Action<int[], int, int, int>>(new Dictionary<string, Action<int[], int, int, int>>
+        {
+            { "addr", (r, a, b, c) => r[c] = r[a] + r[b] },
+            { "addi", (r, a, b, c) => r[c] = r[a] + b },
+            { "mulr", (r, a, b, c) => r[c] = r[a] * r[b] },
+            { "muli", (r, a, b, c) => r[c] = r[a] * b },
+            { "banr", (r, a, b, c) => r[c] = r[a] & r[b] },
+            { "bani", (r, a, b, c) => r[c] = r[a] & b },
+            { "borr", (r, a, b, c) => r[c] = r[a] | r[b] },
+            { "bori", (r, a, b, c) => r[c] = r[a] | b },
+            { "setr", (r, a, b, c) => r[c] = r[a] },
+            { "seti", (r, a, b, c) => r[c] = a },
+            { "gtir", (r, a, b, c) => r[c] = a > r[b] ? 1 : 0 },
+            { "gtri", (r, a, b, c) => r[c] = r[a] > b ? 1 : 0 },
+            { "gtrr", (r, a, b, c) => r[c] = r[a] > r[b] ? 1 : 0 },
+            { "eqir", (r, a, b, c) => r[c] = a == r[b] ? 1 : 0 },
+            { "eqri", (r, a, b, c) => r[c] = r[a] == b ? 1 : 0 },
+            { "eqrr", (r, a, b, c) => r[c] = r[a] == r[b] ? 1 : 0 },
+        });
+
         private string[] input1;
 
         private string[] input2;
 
         private int[] registers = new int[4];
 
-        private Dictionary<string, Action<int, int, int>> instructions;
-
         public void LoadInput(params string[] files)
         {
             input1 = File.ReadAllText(files[0]).Split(new string[] { "\n\n", "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             input2 = File.ReadAllLines(files[1]);
-
-            instructions = new Dictionary<string, Action<int, int, int>>
-            {
-                { "addr", (a, b, c) => registers[c] = registers[a] + registers[b] },
-                { "addi", (a, b, c) => registers[c] = registers[a] + b },
-                { "mulr", (a, b, c) => registers[c] = registers[a] * registers[b] },
-                { "muli", (a, b, c) => registers[c] = registers[a] * b },
-                { "banr", (a, b, c) => registers[c] = registers[a] & registers[b] },
-                { "bani", (a, b, c) => registers[c] = registers[a] & b },
-                { "borr", (a, b, c) => registers[c] = registers[a] | registers[b] },
-                { "bori", (a, b, c) => registers[c] = registers[a] | b },
-                { "setr", (a, b, c) => registers[c] = registers[a] },
-                { "seti", (a, b, c) => registers[c] = a },
-                { "gtir", (a, b, c) => registers[c] = a > registers[b] ? 1 : 0 },
-                { "gtri", (a, b, c) => registers[c] = registers[a] > b ? 1 : 0 },
-                { "gtrr", (a, b, c) => registers[c] = registers[a] > registers[b] ? 1 : 0 },
-                { "eqir", (a, b, c) => registers[c] = a == registers[b] ? 1 : 0 },
-                { "eqri", (a, b, c) => registers[c] = registers[a] == b ? 1 : 0 },
-                { "eqrr", (a, b, c) => registers[c] = registers[a] == registers[b] ? 1 : 0 },
-            };
         }
 
         public object Part1()
@@ -56,7 +55,7 @@ namespace AoC2018
                 foreach (var instruction in instructions.Values)
                 {
                     before.CopyTo(registers, 0);
-                    instruction(test[1], test[2], test[3]);
+                    instruction(registers, test[1], test[2], test[3]);
                     if (keys.All(x => registers[x] == after[x]))
                     {
                         c++;
@@ -97,7 +96,7 @@ namespace AoC2018
                     }
 
                     before.CopyTo(registers, 0);
-                    instruction.Value(test[1], test[2], test[3]);
+                    instruction.Value(registers, test[1], test[2], test[3]);
                     if (!keys.All(x => registers[x] == after[x]))
                     {
                         candidates[test[0]].Remove(instruction.Key);
@@ -117,7 +116,7 @@ namespace AoC2018
             foreach (var line in input2)
             {
                 var op = line.Split(' ').Select(x => int.Parse(x)).ToArray();
-                instructions[instructionMap[op[0]]](op[1], op[2], op[3]);
+                instructions[instructionMap[op[0]]](registers, op[1], op[2], op[3]);
             }
 
             return registers[0];

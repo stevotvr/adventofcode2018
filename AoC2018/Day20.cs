@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -6,13 +7,13 @@ namespace AoC2018
 {
     class Day20 : ISolution
     {
-        private static readonly Dictionary<char, int> directions = new Dictionary<char, int>
+        private static readonly ReadOnlyDictionary<char, int> directions = new ReadOnlyDictionary<char, int>(new Dictionary<char, int>
         {
             { 'N', 0 },
             { 'E', 1 },
             { 'S', 2 },
             { 'W', 3 },
-        };
+        });
 
         private string input;
 
