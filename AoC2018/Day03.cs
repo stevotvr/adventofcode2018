@@ -6,6 +6,8 @@ namespace AoC2018
 {
     class Day03 : ISolution
     {
+        private static readonly string[] splitChars = new string[] { " @ ", ",", ": ", "x" };
+
         private string[] input;
 
         public void LoadInput(params string[] files)
@@ -19,7 +21,7 @@ namespace AoC2018
             var overlap = new HashSet<(int x, int y)>();
             foreach (var l in input)
             {
-                var parts = l.Split(new string[] { " @ ", ",", ": ", "x" }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = l.Split(splitChars, StringSplitOptions.None);
                 var left = int.Parse(parts[1]);
                 var top = int.Parse(parts[2]);
                 var width = int.Parse(parts[3]);
@@ -50,7 +52,7 @@ namespace AoC2018
             var map = new Dictionary<(int x, int y), List<int>>();
             foreach (var l in input)
             {
-                var parts = l.Split(new string[] { " @ ", ",", ": ", "x" }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = l.Split(splitChars, StringSplitOptions.None);
                 var left = int.Parse(parts[1]);
                 var top = int.Parse(parts[2]);
                 var width = int.Parse(parts[3]);
