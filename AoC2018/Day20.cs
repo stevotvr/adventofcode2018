@@ -6,6 +6,14 @@ namespace AoC2018
 {
     class Day20 : ISolution
     {
+        private static readonly Dictionary<char, int> directions = new Dictionary<char, int>
+        {
+            { 'N', 0 },
+            { 'E', 1 },
+            { 'S', 2 },
+            { 'W', 3 },
+        };
+
         private string input;
 
         public void LoadInput(params string[] files)
@@ -81,13 +89,5 @@ namespace AoC2018
         {
             public Room[] rooms = new Room[4];
         }
-
-        private static readonly Dictionary<char, int> directions = new Dictionary<char, int>
-        {
-            { 'N', 0 },
-            { 'E', 1 },
-            { 'S', 2 },
-            { 'W', 3 },
-        };
     }
 }

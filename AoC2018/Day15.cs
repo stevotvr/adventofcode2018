@@ -15,6 +15,14 @@ namespace AoC2018
 
         private bool allowElfDeath = true;
 
+        private Queue<Node> queue = new Queue<Node>();
+
+        private HashSet<Node> visited = new HashSet<Node>();
+
+        private Dictionary<Node, int> distances = new Dictionary<Node, int>();
+
+        private List<Node> matches = new List<Node>();
+
         public void LoadInput(params string[] files)
         {
             input = File.ReadAllLines(files[0]);
@@ -184,14 +192,6 @@ namespace AoC2018
             victim = null;
             return false;
         }
-
-        private Queue<Node> queue = new Queue<Node>();
-
-        private HashSet<Node> visited = new HashSet<Node>();
-
-        private Dictionary<Node, int> distances = new Dictionary<Node, int>();
-
-        private List<Node> matches = new List<Node>();
 
         private bool FindNearestAdjacent(Node player, Func<Node, bool> cond, out Node nearest)
         {

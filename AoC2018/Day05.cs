@@ -19,6 +19,23 @@ namespace AoC2018
             return React(input).Length;
         }
 
+        public object Part2()
+        {
+            var handles = new WaitHandle[26];
+            var lengths = new int[26];
+            input = React(input);
+            var lower = input.ToLower();
+            for (var i = 0; i < 26; i++)
+            {
+                handles[i] = new AutoResetEvent(false);
+                ThreadPool.QueueUserWorkItem(new WaitCallback(TryPoly), new object[] { input, i, lower, lengths, handles[i] });
+            }
+
+            WaitHandle.WaitAll(handles);
+
+            return lengths.Min();
+        }
+
         private static string React(string input)
         {
             var sb = new StringBuilder();
@@ -52,23 +69,6 @@ namespace AoC2018
             }
 
             return input;
-        }
-
-        public object Part2()
-        {
-            var handles = new WaitHandle[26];
-            var lengths = new int[26];
-            input = React(input);
-            var lower = input.ToLower();
-            for (var i = 0; i < 26; i++)
-            {
-                handles[i] = new AutoResetEvent(false);
-                ThreadPool.QueueUserWorkItem(new WaitCallback(TryPoly), new object[] { input, i, lower, lengths, handles[i] });
-            }
-
-            WaitHandle.WaitAll(handles);
-
-            return lengths.Min();
         }
 
         private void TryPoly(object state)

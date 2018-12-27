@@ -7,6 +7,24 @@ namespace AoC2018
 {
     class Day24 : ISolution
     {
+        private enum Damage
+        {
+            Cold,
+            Fire,
+            Radiation,
+            Slashing,
+            Bludgeoning,
+        }
+
+        private static readonly Dictionary<string, Damage> damageMap = new Dictionary<string, Damage>
+        {
+            { "cold", Damage.Cold },
+            { "fire", Damage.Fire },
+            { "radiation", Damage.Radiation },
+            { "slashing", Damage.Slashing },
+            { "bludgeoning", Damage.Bludgeoning },
+        };
+
         private string[] input;
 
         public void LoadInput(params string[] files)
@@ -200,24 +218,6 @@ namespace AoC2018
                     this.target = null;
                 }
             }
-        }
-
-        private static readonly Dictionary<string, Damage> damageMap = new Dictionary<string, Damage>
-        {
-            { "cold", Damage.Cold },
-            { "fire", Damage.Fire },
-            { "radiation", Damage.Radiation },
-            { "slashing", Damage.Slashing },
-            { "bludgeoning", Damage.Bludgeoning },
-        };
-
-        private enum Damage
-        {
-            Cold,
-            Fire,
-            Radiation,
-            Slashing,
-            Bludgeoning,
         }
     }
 }

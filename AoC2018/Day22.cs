@@ -6,6 +6,20 @@ namespace AoC2018
 {
     class Day22 : ISolution
     {
+        private enum Tool
+        {
+            Neither,
+            Torch,
+            Gear,
+        }
+
+        private enum Terrain
+        {
+            Rocky,
+            Wet,
+            Narrow,
+        }
+
         private int depth;
 
         private int targetX;
@@ -206,20 +220,6 @@ namespace AoC2018
                 this.erosion = (geo + depth) % 20183;
                 this.type = (Terrain)(this.erosion % 3);
             }
-        }
-
-        private enum Tool
-        {
-            Neither,
-            Torch,
-            Gear,
-        }
-
-        private enum Terrain
-        {
-            Rocky,
-            Wet,
-            Narrow,
         }
     }
 }

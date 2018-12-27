@@ -21,6 +21,12 @@ namespace AoC2018
             return SumMeta(input);
         }
 
+        public object Part2()
+        {
+            index = 0;
+            return SumNode(BuildTree(input));
+        }
+
         private int SumMeta(int[] data)
         {
             var children = data[index++];
@@ -37,12 +43,6 @@ namespace AoC2018
             }
 
             return total;
-        }
-
-        public object Part2()
-        {
-            index = 0;
-            return SumNode(BuildTree(input));
         }
 
         private Node BuildTree(int[] data)
