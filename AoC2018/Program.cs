@@ -15,16 +15,15 @@ namespace AoC2018
             {
                 if (day == 0)
                 {
-                    Console.Clear();
                     Console.Write("Enter day: ");
-                    var input = Console.ReadLine();
-                    if (!int.TryParse(input,out day) || day < 1 || day > 25)
+                    if (!int.TryParse(Console.ReadLine(), out day) || day < 1 || day > 25)
                     {
                         day = 0;
                         Console.WriteLine("Invalid day");
                     }
                     else
                     {
+                        Console.Clear();
                         Console.WriteLine($"Day {day}");
                     }
                 }
@@ -83,6 +82,7 @@ namespace AoC2018
                             break;
                         case ConsoleKey.Escape:
                             day = 0;
+                            Console.Clear();
                             break;
                     }
                 }
